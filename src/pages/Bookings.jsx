@@ -11,7 +11,6 @@ function Bookings() {
         <BookingTableOperations />
       </Row>
 
-   
       <BookingTable />
     </>
   );
