@@ -13,8 +13,8 @@ export function useLogin() {
         password,
       }),
     onSuccess: (user) => {
-      navigate("/dashboard");
-      queryClient.setQueriesData(["user"], user);
+      navigate("/dashboard", { replace: true });
+      queryClient.setQueryData(["user"], user.user);
       toast.success("User logged in successfully");
     },
     onError: (err) => {
