@@ -13,6 +13,6 @@ export function useBooking() {
     queryFn: () => getBooking(bookingId),
     retry: false,
   });
-
+console.log(booking,'single booking')
   return { isLoading, booking, error };
 }

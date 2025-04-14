@@ -1,11 +1,8 @@
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
-
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
-
-import { formatCurrency } from "../../utils/helpers";
-import { formatDistanceFromNow } from "../../utils/helpers";
+import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
 import {
   HiArrowDownOnSquare,
@@ -50,16 +47,19 @@ function BookingRow({
   booking: {
     id: bookingId,
     created_at,
-    startDate,
-    endDate,
+    start_date: startDate,
+    end_date: endDate,
     numNights,
     numGuests,
-    totalPrice,
+    total_price: totalPrice,
     status,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
+    user = {}, // Default to empty object
+    cabin = {}, // Default to empty object
   },
 }) {
+  const { full_name: guestName = "Unknown Guest", email = "N/A" } = user;
+  const { name: cabinName = "Unknown Cabin" } = cabin;
+
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
@@ -81,20 +81,31 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
-          &rarr; {numNights} night stay
+          {startDate
+            ? isToday(new Date(startDate))
+              ? "Today"
+              : formatDistanceFromNow(startDate)
+            : "N/A"}
+          {numNights ? ` → ${numNights} night stay` : ""}
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
+          {startDate && endDate
+            ? `${format(new Date(startDate), "MMM dd yyyy")} — ${format(
+                new Date(endDate),
+                "MMM dd yyyy"
+              )}`
+            : "N/A"}
         </span>
       </Stacked>
 
-      <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
+      <Tag type={statusToTagName[status] || "silver"}>
+        {status ? status.replace("-", " ") : "N/A"}
+      </Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>
+        {totalPrice !== undefined ? formatCurrency(totalPrice) : "N/A"}
+      </Amount>
+
       <Modal>
         <Menus.Menu>
           <Menus.Toggle id={bookingId} />

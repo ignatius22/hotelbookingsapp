@@ -12,9 +12,9 @@ function SignupForm() {
   const { register, formState, getValues, handleSubmit, reset } = useForm();
   const { errors } = formState;
   const { signup, isLoading } = useSignup();
-  function onSubmit({ fullName, email, password }) {
+  function onSubmit({ full_name, email, password }) {
     signup(
-      { fullName, email, password },
+      { full_name, email, password },
       {
         onSettled: () => reset(),
       }
@@ -22,12 +22,12 @@ function SignupForm() {
   }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow label="Full name" error={errors?.fullName?.message}>
+      <FormRow label="Full name" error={errors?.full_name?.message}>
         <Input
           type="text"
-          id="fullName"
+          id="full_name"
           disabled={isLoading}
-          {...register("fullName", { required: "This feild is requied" })}
+          {...register("full_name", { required: "This feild is requied" })}
         />
       </FormRow>
 

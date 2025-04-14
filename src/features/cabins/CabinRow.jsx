@@ -51,8 +51,8 @@ function CabinRow({ cabin }) {
   const {
     id: cabinId,
     name,
-    maxCapacity,
-    regularPrice,
+    max_capacity,
+    regular_price,
     discount,
     description,
     image,
@@ -63,19 +63,20 @@ function CabinRow({ cabin }) {
   function handleDuplicate() {
     createCabin({
       name: `Copy of ${name}`,
-      maxCapacity,
-      regularPrice,
+      max_capacity,
+      regular_price,
       discount,
       description,
       image,
     });
   }
+
   return (
     <Table.Row>
       <Img src={image} />
       <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity} guests</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
+      <div>Fits up to {max_capacity} guests</div>
+      <Price>{formatCurrency(regular_price)}</Price>
       {discount ? (
         <Discount>{formatCurrency(discount)}</Discount>
       ) : (

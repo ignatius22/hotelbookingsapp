@@ -9,15 +9,12 @@ import {
 
 import DataItem from "../../ui/DataItem";
 import { Flag } from "../../ui/Flag";
-
 import { formatDistanceFromNow, formatCurrency } from "../../utils/helpers";
 
 const StyledBookingDataBox = styled.section`
-  /* Box */
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
-
   overflow: hidden;
 `;
 
@@ -101,23 +98,31 @@ const Footer = styled.footer`
   text-align: right;
 `;
 
-// A purely presentational component
 function BookingDataBox({ booking }) {
   const {
-    created_at,
-    startDate,
-    endDate,
-    numNights,
-    numGuests,
-    cabinPrice,
-    extrasPrice,
-    totalPrice,
-    hasBreakfast,
-    observations,
-    isPaid,
-    guests: { fullName: guestName, email, country, countryFlag, nationalID },
-    cabins: { name: cabinName },
+    created_at = new Date().toISOString(),
+    start_date: startDate,
+    end_date: endDate,
+    num_nights: numNights = 0,
+    num_guests: numGuests = 0,
+    cabin_price: cabinPrice = 0,
+    extras_price: extrasPrice = 0,
+    total_price: totalPrice = 0,
+    has_breakfast: hasBreakfast = false,
+    observations = "",
+    is_paid: isPaid,
+    user = {},
+    cabin = {},
   } = booking;
+
+  const {
+    full_name: guestName = "Unknown Guest",
+    email = "N/A",
+    country = "N/A",
+    country_flag: countryFlag = "",
+    national_id: nationalID = "N/A",
+  } = user;
+  const { name: cabinName = "Unknown Cabin" } = cabin;
 
   return (
     <StyledBookingDataBox>
@@ -130,11 +135,13 @@ function BookingDataBox({ booking }) {
         </div>
 
         <p>
-          {format(new Date(startDate), "EEE, MMM dd yyyy")} (
-          {isToday(new Date(startDate))
-            ? "Today"
-            : formatDistanceFromNow(startDate)}
-          ) &mdash; {format(new Date(endDate), "EEE, MMM dd yyyy")}
+          {startDate && endDate
+            ? `${format(new Date(startDate), "EEE, MMM dd yyyy")} (${
+                isToday(new Date(startDate))
+                  ? "Today"
+                  : formatDistanceFromNow(startDate)
+              }) — ${format(new Date(endDate), "EEE, MMM dd yyyy")}`
+            : "Dates not available"}
         </p>
       </Header>
 
@@ -144,9 +151,9 @@ function BookingDataBox({ booking }) {
           <p>
             {guestName} {numGuests > 1 ? `+ ${numGuests - 1} guests` : ""}
           </p>
-          <span>&bull;</span>
+          <span>•</span>
           <p>{email}</p>
-          <span>&bull;</span>
+          <span>•</span>
           <p>National ID {nationalID}</p>
         </Guest>
 
@@ -164,13 +171,12 @@ function BookingDataBox({ booking }) {
         </DataItem>
 
         <Price isPaid={isPaid}>
-          <DataItem icon={<HiOutlineCurrencyDollar />} label={`Total price`}>
+          <DataItem icon={<HiOutlineCurrencyDollar />} label="Total price">
             {formatCurrency(totalPrice)}
-
-            {hasBreakfast &&
+            {extrasPrice > 0 &&
               ` (${formatCurrency(cabinPrice)} cabin + ${formatCurrency(
                 extrasPrice
-              )} breakfast)`}
+              )} extras)`}
           </DataItem>
 
           <p>{isPaid ? "Paid" : "Will pay at property"}</p>
@@ -178,7 +184,12 @@ function BookingDataBox({ booking }) {
       </Section>
 
       <Footer>
-        <p>Booked {format(new Date(created_at), "EEE, MMM dd yyyy, p")}</p>
+        <p>
+          Booked{" "}
+          {created_at
+            ? format(new Date(created_at), "EEE, MMM dd yyyy, p")
+            : "N/A"}
+        </p>
       </Footer>
     </StyledBookingDataBox>
   );

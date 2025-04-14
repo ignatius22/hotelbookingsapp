@@ -93,7 +93,7 @@ function CheckinBooking() {
           id="confirm"
           disabled={confirmPaid || isCheckingIn}
         >
-          I confirmed that {guests.fullName} has paid the total amount of
+          I confirmed that {guests.full_name} has paid the total amount of
           {!addBreakfast
             ? formatCurrency(totalPrice)
             : `${formatCurrency(

@@ -1,13 +1,18 @@
+import { parseJsonApiData } from "../utils/helpers";
+import { getToken } from "../utils/tokenUtils";
+import { fetchApi } from "./apiRequest";
 import supabase, { supabaseUrl } from "./supabase";
 
 export async function getCabins() {
-  const { data, error } = await supabase.from("cabins").select("*");
-  if (error) {
-    console.error(error);
-    throw new Error("Cabins could not be loaded");
-  }
-  return data;
+  const url = `/api/v1/cabins`;
+  const response = await fetchApi(url, {
+    method: "GET",
+  });
+
+  return parseJsonApiData(response.data, response.included || []);
 }
+
+
 export async function createEditCabin(newCabin, id) {
   console.log(newCabin, id);
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
